@@ -1,7 +1,8 @@
 import { INTEGER, Model, STRING } from 'sequelize';
+import ITeam from '../../interfaces/Team';
 import sequelize from '.';
 
-export default class Team extends Model {
+export default class Team extends Model implements ITeam {
   declare id: number;
   declare teamName: string;
 }
