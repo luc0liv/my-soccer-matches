@@ -1,4 +1,5 @@
 import * as express from 'express';
+import errorHandler from './database/middlewares/errorHandler';
 import teamRouter from './routers/teamRouter';
 import userRouter from './routers/userRouter';
 
@@ -26,6 +27,7 @@ class App {
     this.app.use(accessControl);
     this.app.use(teamRouter);
     this.app.use(userRouter);
+    this.app.use(errorHandler);
   }
 
   public start(PORT: string | number):void {
