@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import UserRequest from '../../interfaces/UserRequest';
 // import IUser from '../../interfaces/User';
 // import generateToken from '../../utils/jwtToken';
 import statusCodes from '../../utils/statusCodes';
@@ -10,6 +11,16 @@ export default class UserController {
       const { email, password } = req.body;
       const token = await UserService.getUserByEmail(email, password);
       return res.status(statusCodes.ok).json({ token });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getRole(req: UserRequest, res: Response, next: NextFunction) {
+    try {
+      const email = req.user as string;
+      const role = await UserService.getUserRole(email);
+      return res.status(statusCodes.ok).json({ role });
     } catch (error) {
       next(error);
     }

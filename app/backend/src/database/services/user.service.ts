@@ -21,4 +21,9 @@ export default class UserService {
     const token = generateToken(user);
     return token;
   }
+
+  static async getUserRole(email: string): Promise<string | undefined> {
+    const user = await User.findOne({ where: { email } });
+    return user?.role;
+  }
 }
