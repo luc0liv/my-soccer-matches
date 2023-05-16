@@ -13,20 +13,45 @@ const { expect } = chai;
 
 describe('Testing /login endpoint', () => {
   let chaiHttpResponse: Response;
-  afterEach(()=>{
+  afterEach(() => {
     sinon.restore();
-  })
+  });
 
   it('login should return a token', async () => {
-      chaiHttpResponse = await chai.request(app).post('/login').send({
-        email: 'user@user.com',
-        password: 'secret_user'
-      });
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      email: 'user@user.com',
+      password: 'secret_user',
+    });
 
     expect(chaiHttpResponse.body).to.be.a('object');
     expect(chaiHttpResponse.body).to.have.property('token');
     expect(chaiHttpResponse.body.token).to.be.a('string');
   });
+
+  it('login should have all fields', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      email: 'user@user.com',
+    });
+
+    expect(chaiHttpResponse.body).to.be.a('object');
+    expect(chaiHttpResponse.body).to.have.property('message');
+    expect(chaiHttpResponse.body.message).to.be.a('string');
+    expect(chaiHttpResponse.body.message).to.be.equal(
+      'All fields must be filled'
+    );
+  });
+
+  it('login should have valid data', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      email: 'useasdasdasd',
+      password: 'dsasd3w',
+    });
+
+    expect(chaiHttpResponse.body).to.be.a('object');
+    expect(chaiHttpResponse.body).to.have.property('message');
+    expect(chaiHttpResponse.body.message).to.be.a('string');
+    expect(chaiHttpResponse.body.message).to.be.equal(
+      'Invalid email or password'
+    );
+  });
 });
-
-
