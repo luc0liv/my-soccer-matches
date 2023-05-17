@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import UserRequest from '../../interfaces/UserRequest';
-// import IUser from '../../interfaces/User';
-// import generateToken from '../../utils/jwtToken';
 import statusCodes from '../../utils/statusCodes';
 import UserService from '../services/user.service';
 

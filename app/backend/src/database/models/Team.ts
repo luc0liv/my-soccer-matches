@@ -1,7 +1,6 @@
 import { INTEGER, Model, STRING } from 'sequelize';
 import ITeam from '../../interfaces/Team';
 import sequelize from '.';
-import Match from './Match';
 
 export default class Team extends Model implements ITeam {
   declare id: number;
@@ -26,41 +25,5 @@ Team.init(
     modelName: 'teams',
     timestamps: false,
     underscored: true,
-  },
-);
-
-Team.hasMany(
-  Match,
-  {
-    foreignKey: {
-      name: 'homeTeamId',
-    },
-  },
-);
-
-Team.hasMany(
-  Match,
-  {
-    foreignKey: {
-      name: 'awayTeamId',
-    },
-  },
-);
-
-Match.belongsTo(
-  Team,
-  {
-    foreignKey: {
-      name: 'awayTeamId',
-    },
-  },
-);
-
-Match.belongsTo(
-  Team,
-  {
-    foreignKey: {
-      name: 'homeTeamId',
-    },
   },
 );
