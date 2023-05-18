@@ -6,6 +6,7 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 
 import { Response } from 'superagent';
+import User from '../database/models/User';
 
 chai.use(chaiHttp);
 
@@ -54,4 +55,27 @@ describe('Testing /login endpoint', () => {
       'Invalid email or password'
     );
   });
+
+  it('login should have valid data', async () => {
+    sinon.stub(User, 'findOne').resolves(null)
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      email: 'lu@email.com',
+      password: 'd123sds433',
+    });
+
+    expect(chaiHttpResponse.body).to.be.a('object');
+    expect(chaiHttpResponse.body).to.have.property('message');
+    expect(chaiHttpResponse.body.message).to.be.a('string');
+    expect(chaiHttpResponse.body.message).to.be.equal(
+      'Invalid email or password'
+    );
+  });
+
+  it('get role', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login/role').send({
+      email: 'user@user.com',
+    });
+
+    expect(chaiHttpResponse.body).to.be.a('object');
 });
+})
