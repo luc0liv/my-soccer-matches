@@ -16,4 +16,14 @@ export default class MatchController {
       next(error);
     }
   }
+
+  static async updateMatch(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await MatchService.updateMatch(+id);
+      return res.status(statusCodes.ok).json({ message: 'Finished' });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
