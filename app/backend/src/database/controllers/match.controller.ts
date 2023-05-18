@@ -37,4 +37,13 @@ export default class MatchController {
       next(error);
     }
   }
+
+  static async createMatch(req: Request, res: Response, next: NextFunction) {
+    try {
+      const newMatch = await MatchService.createMatch(req.body);
+      return res.status(statusCodes.created).json(newMatch);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

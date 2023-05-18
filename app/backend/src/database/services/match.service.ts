@@ -1,6 +1,8 @@
 import Match from '../models/Match';
 import IMatch from '../../interfaces/Match';
 import Team from '../models/Team';
+import HttpError from '../../utils/httpError';
+import statusCodes from '../../utils/statusCodes';
 
 export default class MatchService {
   public static async getAllMatches(): Promise<IMatch[]> {
@@ -69,5 +71,25 @@ export default class MatchService {
         },
       },
     );
+  }
+
+  public static async createMatch(match: IMatch): Promise<IMatch> {
+    const { awayTeamId, homeTeamId } = match;
+    if (awayTeamId === homeTeamId) {
+      throw new HttpError(
+        statusCodes.unprocessableEntity,
+        'It is not possible to create a match with two equal teams',
+      );
+    }
+
+    const homeTeam = await Team.findByPk(awayTeamId);
+    const awayTeam = await Team.findByPk(homeTeamId);
+
+    if (!homeTeam || !awayTeam) {
+      throw new HttpError(statusCodes.notFound, 'There is no team with such id!');
+    }
+
+    const newMatch = await Match.create({ ...match, inProgress: true });
+    return newMatch;
   }
 }
