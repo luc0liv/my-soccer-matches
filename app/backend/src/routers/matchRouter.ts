@@ -5,6 +5,7 @@ import MatchController from '../database/controllers/match.controller';
 const matchRouter = Router();
 
 matchRouter.get('/matches', MatchController.getAllMatchs);
+matchRouter.patch('/matches/:id', validateToken, MatchController.updateMatchInProgress);
 matchRouter.patch('/matches/:id/finish', validateToken, MatchController.updateMatch);
 
 export default matchRouter;
