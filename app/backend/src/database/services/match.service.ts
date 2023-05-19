@@ -73,6 +73,14 @@ export default class MatchService {
     );
   }
 
+  public static async checkForInvalidIds(awayTeamId: number, homeTeamId: number): Promise<void> {
+    const ids = [awayTeamId, homeTeamId];
+    const teams = await Promise.all(ids.map((id) => Team.findByPk(id)));
+    if (teams.includes(null)) {
+      throw new HttpError(statusCodes.notFound, 'There is no team with such id!');
+    }
+  }
+
   public static async createMatch(match: IMatch): Promise<IMatch> {
     const { awayTeamId, homeTeamId } = match;
     if (awayTeamId === homeTeamId) {
@@ -82,12 +90,7 @@ export default class MatchService {
       );
     }
 
-    const homeTeam = await Team.findByPk(awayTeamId);
-    const awayTeam = await Team.findByPk(homeTeamId);
-
-    if (!homeTeam || !awayTeam) {
-      throw new HttpError(statusCodes.notFound, 'There is no team with such id!');
-    }
+    await this.checkForInvalidIds(awayTeamId, homeTeamId);
 
     const newMatch = await Match.create({ ...match, inProgress: true });
     return newMatch;
